@@ -1,0 +1,40 @@
+use spam_guard;
+SELECT NOW();
+SET SESSION max_execution_time = 5000; -- sets a 5-second timeout
+ALTER TABLE spam_logs ADD COLUMN action VARCHAR(255);
+SET GLOBAL wait_timeout = 28800;
+SET GLOBAL max_allowed_packet = 64*1024*1024;
+ALTER TABLE spam_logs
+ADD COLUMN log_time DATETIME;
+
+CREATE TABLE spam_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255),
+    user_id BIGINT,
+    message TEXT,
+    reason VARCHAR(255),
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE spam_logs
+ADD COLUMN action VARCHAR(255);
+
+DROP TABLE IF EXISTS spam_logs;
+
+CREATE TABLE spam_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255),
+    user_id BIGINT,
+    message TEXT,
+    action VARCHAR(255),
+    log_time DATETIME
+);
+
+CREATE TABLE spam_keywords (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    keyword VARCHAR(255) NOT NULL UNIQUE
+);
+
+INSERT INTO spam_keywords (keyword) VALUES ('free'), ('crypto'), ('join now'), ('click here'), ('buy now'), ('earn money');
+
+select * from spam_logs;
